@@ -371,16 +371,16 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    2,    2,    2,
+        2,    2,    2,    2,    2,    2,    2,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        1,    1,    1,    1,    1,    1,    2,    2,    2,    2,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 
-        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    2,    2,    2,    2,    2,    2,    2,    2,
-        2,    2,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -436,11 +436,12 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "longest_string.l"
-#line 2 "longest_string.l"
-int counter = 0; 
-#line 443 "lex.yy.c"
+#line 1 "roman_to_decimal.l"
+#line 2 "roman_to_decimal.l"
+    #include<stdio.h>
+   void romantodecimal(string);
 #line 444 "lex.yy.c"
+#line 445 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -657,9 +658,9 @@ YY_DECL
 		}
 
 	{
-#line 4 "longest_string.l"
+#line 6 "roman_to_decimal.l"
 
-#line 663 "lex.yy.c"
+#line 664 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -718,20 +719,15 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 5 "longest_string.l"
-{ 
-if (yyleng > counter) 
-{ 
-counter = yyleng; 
-} 
-} 
+#line 7 "roman_to_decimal.l"
+{romantodecimal(atoi(yytext));}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "longest_string.l"
+#line 8 "roman_to_decimal.l"
 ECHO;
 	YY_BREAK
-#line 735 "lex.yy.c"
+#line 731 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1736,15 +1732,73 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 11 "longest_string.l"
+#line 8 "roman_to_decimal.l"
 
-int main() 
-{ 
-yylex(); 
-printf("Largest String: %d", counter); 
-printf("\n"); 
-return 0;
-} 
+
+int main()
+{
+printf("\n Enter the roman number: ");
+yylex();
+}
+
+void romantodecimal(char romanNumber)
+{
+ 	int i = 0, num = 0;
+
+   while(romanNumber[i])
+   {
+      //if condition for checking validity of roman number
+      if(convert(romanNumber[i]) < 0 )
+      {
+         printf("\nInvalid Roman Number.\n");
+         return 0;
+      }
+
+      //if condition for checking validity of roman number
+      if((strlen(romanNumber) - i ) > 2)
+      {
+         if(convert(romanNumber[i]) < convert(romanNumber[i+2]))
+         {
+            printf("\nInvalid Roman Number.\n");
+            return 0;
+         }
+      }
+
+      //if condition for converting roman number into decimal number
+      if(convert(romanNumber[ i ]) >= convert(romanNumber[+1])) //true is first roman number is greater or equal to second
+         num = num + convert(romanNumber[i]);
+      else
+      {
+         num = num + (convert(romanNumber[i+1]) - convert(romanNumber[i]));
+         i++;
+      }
+      i++;
+   }
+
+   //displaying converted number
+   printf("\nEquivalent decimal number: %d\n", num);
+   return 0;
+}
+
+//converting roman number into equivalent decimal value
+int convert(char ch)
+{
+   int value = 0;
+
+   switch(ch)
+   {
+      case 'I': value = 1; break;
+      case 'V': value = 5; break;
+      case 'X': value = 10; break;
+      case 'L': value = 50; break;
+      case 'C': value = 100; break;
+      case 'D': value = 500; break;
+      case 'M': value = 1000; break;
+      case '\0': value = 0; break;
+      default: value = -1;
+   }
+   return value;
+}   
 int yywrap()
 {
 return 1;
